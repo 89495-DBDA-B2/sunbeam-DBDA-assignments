@@ -13,7 +13,7 @@
 sub1=int (input("Enter First Subject Mark: "))
 sub2=int(input("Enter Second Subject Mark: "))
 sub3=int(input("Enter Third Subject Mark: "))
-print("second")
+
 avg= (sub1 + sub2 + sub3) / 3
 
 if(avg <= 100 and avg >= 90):

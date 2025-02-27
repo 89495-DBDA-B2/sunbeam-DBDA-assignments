@@ -12,5 +12,28 @@
    '''
    
 num=(input("Enter 4 Digit Number: "))
+# for i in num:
+#     print(i,end=" ")
+    
+    
+    
+print()
+l=len(num)
+print(l)
 for i in num:
-    print(i,end=" ")
+   for j in l:
+      print(i,j)
+      l-=1
+
+
+
+num=int(num)
+def rev(n):
+   rev=0
+   while(n>0):
+      digit=n %10
+      rev=rev*10 +digit
+      n=n//10
+   return rev
+revn=rev(num)   
+print("Reverse Number: ",revn)

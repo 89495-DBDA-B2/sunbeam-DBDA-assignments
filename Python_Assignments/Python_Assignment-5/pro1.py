@@ -12,3 +12,15 @@ for i in people.keys():
     add=add+1
 
 print(f"{add} Students are available in list")
+
+
+people['Lisa']='Red'
+print("Lisa fav colour changed..")
+print(people)
+
+people.pop('Jenny')
+print("Jenny removed..")
+print(people)
+
+sorted(people.keys())
+print(people)

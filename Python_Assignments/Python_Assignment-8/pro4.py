@@ -8,12 +8,29 @@
 
 class Painting:
     def __init__(self):
-        print("init")
+        pass
     def calculatePaintingCost(self):
-        print("new")
+        pass
 
 class FlatPainting(Painting):
-    def calculatePaintingCost(self):
-        print("new")
+    def __init__(self,noOfRooms):
 
-p=Painting()
+        self.noOfRooms=noOfRooms
+
+    def calculatePaintingCost(self):
+        cost=self.noOfRooms * 10000
+        return cost
+
+class BulidingPainting(Painting):
+    def __init__(self,noOfFlats):
+
+        self.noOfFlats=noOfFlats
+    def calculatePaintingCost(self):
+        cost=self.noOfFlats * 25000
+        return cost
+
+f1=FlatPainting(2)
+print(f"Cost Price(10000) {f1.calculatePaintingCost()}")
+
+b=BulidingPainting(3)
+print(f"Cost Price(10000) {b.calculatePaintingCost()}")

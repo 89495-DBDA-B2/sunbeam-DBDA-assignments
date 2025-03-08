@@ -2,7 +2,6 @@
 # 1] Write a Python Program find an area of a rectangle and perimeter of the rectangle.
 
 
-
 def rectangle_properties(length, width):
     area = length * width
     perimeter = 2 * (length + width)

@@ -25,8 +25,6 @@ for i in num:
       print(i,j)
       l-=1
 
-
-
 num=int(num)
 def rev(n):
    rev=0

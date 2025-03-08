@@ -22,6 +22,11 @@ class Book(Product):
         print(f"Book manufacture_location: {self._manufacture_location}")
         print(f"Book name: {self.__name}")
         print(f"Book author: {self.__author}")
+
+        if self.__price <= 0:
+            print("Price is not valid.")
+        else:
+            print("Valid price.")
         print(f"Book price: {self.__price}")
         
 

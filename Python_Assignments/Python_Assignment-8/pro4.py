@@ -14,7 +14,6 @@ class Painting:
 
 class FlatPainting(Painting):
     def __init__(self,noOfRooms):
-
         self.noOfRooms=noOfRooms
 
     def calculatePaintingCost(self):
@@ -23,8 +22,8 @@ class FlatPainting(Painting):
 
 class BulidingPainting(Painting):
     def __init__(self,noOfFlats):
-
         self.noOfFlats=noOfFlats
+        
     def calculatePaintingCost(self):
         cost=self.noOfFlats * 25000
         return cost

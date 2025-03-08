@@ -23,4 +23,6 @@ print("Jenny removed..")
 print(people)
 
 sorted(people.keys())
+print("Keys Sorted..")
+
 print(people)

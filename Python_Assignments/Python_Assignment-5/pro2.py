@@ -4,14 +4,10 @@
 # Result: 500
 
 dict1 = {'key 1': 200, 'key 2': 300}
-
 add=0
-
 
 l1=lambda m:m[1]
 l2=list(map(l1,dict1.items()))
-
-
 print(l2)
 
 for i in l2:

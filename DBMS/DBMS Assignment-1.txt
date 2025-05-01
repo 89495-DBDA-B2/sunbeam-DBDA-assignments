@@ -1,0 +1,185 @@
+create spj database;
+
+use spj database;
+
+create table J (`J#` CHAR(4) NOT NULL,Jname CHAR(10),City CHAR(15));
+
+mysql> insert into J values('J1','Sorter','Paris');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into J values('J2','Punch','Rome');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into J values('J3','Reader','Athens');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into J values('J4','Console','Athens');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into J values('J5','Collator','London');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into J values('J6','Terminal','Oslo');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into J values('J7','Tape','London');
+Query OK, 1 row affected (0.02 sec)
+
+
+
+
+create table S(`S#` CHAR(5) NOT NULL, Sname CHAR(20),status SMALLINT, city CHAR(15));
+
+
+
+
+mysql> insert into S values('S1','Smith',20,'London');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into S values('S2','Jones',10,'Paris');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into S values('S3','Blake',30,'Paris');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into S values('S4','Clark',20,'London');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into S values('S5','Adams',30,'Athens');
+Query OK, 1 row affected (0.03 sec)
+
+
+
+
+create table P (`P#` CHAR(6) NOT NULL,Pname CHAR(20),color CHAR(6),weight SMALLINT,city CHAR(15));
+
+
+
+mysql> insert into P values('S5','Nut','Red',12,'London');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into P values('P2','Bold','Green',17,'Paris');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into P values('P3','Screw','Blue',17,'Rome');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into P values('P4','Screw','Red',14,'London');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into P values('P5','Cam','Blue',12,'Paris');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into P values('P6','Cog','Red',19,'London');
+Query OK, 1 row affected (0.02 sec)
+
+
+
+
+
+mysql> create table sp(`S#` CHAR(4) NOT NULL, `P#` CHAR(4) NOT NULL, `J#` CHAR(4) NOT NULL,QTY INT);
+Query OK, 0 rows affected (0.08 sec)
+
+mysql> insert into sp values('S1','P1','J1',200);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S1','P1','J4',700);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S2','P3','J1',400);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S2','P3','J2',200);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S2','P3','J3',200);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into sp values('S2','P3','J4',500);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S2','P3','J5',600);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S2','P3','J6',400);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S2','P3','J7',800);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S2','P5','J2',100);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S3','P3','J1',200);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S3','P4','J2',500);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into sp values('S4','P6','J3',300);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S4','P6','J7',300);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S5','P2','J2',200);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S5','P2','J4',100);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S5','P5','J5',500);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S5','P5','J7',100);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S5','P6','J2',200);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into sp values('S5','P1','J4',100);
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into sp values('S5','P3','J4',200);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S5','P4','J4',800);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into sp values('S5','P5','J4',400);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into sp values('S5','P6','J4',500);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> select * from sp;
++----+----+----+------+
+| S# | P# | J# | QTY  |
++----+----+----+------+
+| S1 | P1 | J1 |  200 |
+| S1 | P1 | J4 |  700 |
+| S2 | P3 | J1 |  400 |
+| S2 | P3 | J2 |  200 |
+| S2 | P3 | J3 |  200 |
+| S2 | P3 | J4 |  500 |
+| S2 | P3 | J5 |  600 |
+| S2 | P3 | J6 |  400 |
+| S2 | P3 | J7 |  800 |
+| S2 | P5 | J2 |  100 |
+| S3 | P3 | J1 |  200 |
+| S3 | P4 | J2 |  500 |
+| S4 | P6 | J3 |  300 |
+| S4 | P6 | J7 |  300 |
+| S5 | P2 | J2 |  200 |
+| S5 | P2 | J4 |  100 |
+| S5 | P5 | J5 |  500 |
+| S5 | P5 | J7 |  100 |
+| S5 | P6 | J2 |  200 |
+| S5 | P1 | J4 |  100 |
+| S5 | P3 | J4 |  200 |
+| S5 | P4 | J4 |  800 |
+| S5 | P5 | J4 |  400 |
+| S5 | P6 | J4 |  500 |
++----+----+----+------+
+24 rows in set (0.00 sec)
+

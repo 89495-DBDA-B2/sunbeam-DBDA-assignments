@@ -1,0 +1,226 @@
+Database Technologies – Assignment 10
+PL-SQL
+
+
+Q.1 Write a procedure that computes the perimeter and the area of a rectangle. Define your own values for the length and width. (Assuming that L and W are the length and width of the rectangle, Perimeter = 2*(L+W) and Area = L*W.
+Ans.
+
+
+DROP PROCEDURE IF EXISTS rect;
+DELIMITER $$
+
+CREATE PROCEDURE rect()
+BEGIN 	
+	DECLARE L FLOAT DEFAULT 10;
+	DECLARE W FLOAT DEFAULT 5;
+
+	DECLARE area FLOAT;
+	DECLARE perimeter FLOAT;
+
+	SET area = L * W;
+	SET perimeter = 2 * (L + W);
+
+	SELECT CONCAT('Length = ', L, ' Width = ', W) AS Dimensions;
+	SELECT CONCAT('Area = ', area) AS Area;
+	SELECT CONCAT('Perimeter = ', perimeter) AS Perimeter;
+END $$
+
+DELIMITER ;
+
+
+*********** OUTPUT: **************
+mysql> call rect();
++-----------------------+
+| Dimensions            |
++-----------------------+
+| Length = 10 Width = 5 |
++-----------------------+
+1 row in set (0.00 sec)
+
++-----------+
+| Area      |
++-----------+
+| Area = 50 |
++-----------+
+1 row in set (0.00 sec)
+
++----------------+
+| Perimeter      |
++----------------+
+| Perimeter = 30 |
++----------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+
+
+
+Q.2 Write a procedure that declares an integer variable called num, assigns a value to it, and computes and inserts into the temp table the value of the variable itself, its square, and its cube.
+Ans.
+
+DELIMITER $$
+
+DROP PROCEDURE IF EXISTS numsq $$
+
+CREATE PROCEDURE numsq()
+BEGIN
+    DECLARE n INT DEFAULT 10;
+    DECLARE s INT;
+    DECLARE c INT;
+    
+    -- Compute square and cube
+    SET s = n * n;
+    SET c = n * n * n;
+    
+    -- Insert values into the temp table
+    INSERT INTO temp(num, square, cuben)
+    VALUES(n, s, c);
+    
+END $$
+
+DELIMITER ;
+
+
+
+Q.3 Create a procedure to Convert a temperature in Fahrenheit (F) to its equivalent in Celsius (C) and vice versa. The required formulae are:- 
+C= (F-32)*5/9 F= 9/5*C + 32
+Ans.
+
+
+DROP PROCEDURE IF EXISTS t_f;
+DELIMITER $$
+
+CREATE PROCEDURE t_f()
+
+BEGIN
+	DECLARE C FLOAT DEFAULT 90;
+	DECLARE F FLOAT DEFAULT 50;
+	DECLARE result_c FLOAT;
+	DECLARE result_f FLOAT;
+	
+	SET result_c=(F-32)*5/9;
+	
+	SET result_f= (9/5) *C + 32;
+	
+	SELECT CONCAT("Fahrenheit: ",result_f);
+	SELECT CONCAT("Celsius : ",result_c);
+END $$
+
+
+DELIMITER ;
+
+********** OUTPUT **********
+
+mysql> source /home/sunbeam/Desktop/PL_SQL3.sql
+
+mysql> call t_f();
++---------------------------------+
+| CONCAT("Fahrenheit: ",result_f) |
++---------------------------------+
+| Fahrenheit: 194                 |
++---------------------------------+
+1 row in set (0.00 sec)
+
++-------------------------------+
+| CONCAT("Celsius : ",result_c) |
++-------------------------------+
+| Celsius : 10                  |
++-------------------------------+
+1 row in set (0.00 sec)
+
+
+
+4.Create a procedure to Convert a number of inches into yards, feet, and inches. For example, 124 inches equals 3 yards, 1 foot, and 4 inches.
+Ans.
+
+DROP PROCEDURE IF EXISTS convert_inches;
+DELIMITER $$
+
+CREATE PROCEDURE convert_inches(IN total_inches INT)
+BEGIN
+    DECLARE yards INT;
+    DECLARE feet INT;
+    DECLARE inches INT;
+
+    -- 1 yard = 36 inches
+    SET yards = total_inches DIV 36;
+
+    -- remaining inches after yards
+    SET feet = (total_inches MOD 36) DIV 12;
+
+    -- remaining inches after feet
+    SET inches = (total_inches MOD 36) MOD 12;
+
+    SELECT CONCAT(total_inches, ' inches = ', yards, ' yard(s), ', feet, ' foot/feet, ', inches, ' inch(es)') AS Conversion;
+END $$
+
+DELIMITER ;
+
+**********  OUTPUT  **********
+
+mysql> source /home/sunbeam/Desktop/PL_SQL4.sql
+Query OK, 0 rows affected (0.03 sec)
+
+Query OK, 0 rows affected (0.02 sec)
+
+mysql> call convert_inches(30);
++------------------------------------------------+
+| Conversion                                     |
++------------------------------------------------+
+| 30 inches = 0 yard(s), 2 foot/feet, 6 inch(es) |
++------------------------------------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+ 
+
+
+
+Q.5 Your block should read in two real numbers and tell whether the product of the two numbers is equal to or greater than 100.
+Ans.
+
+
+DROP PROCEDURE IF EXISTS pro;
+DELIMITER $$
+
+CREATE PROCEDURE pro(IN n1 INT,IN n2 INT)
+BEGIN
+	DECLARE result FLOAT;
+	
+	SET result = n1 * n2;
+	
+	IF result >= 100 THEN
+		SELECT 'product is equal to or greater than 100' as Result;
+	ELSE
+		SELECT 'product is not equal to or greater than 100' as Result;
+	END IF;
+	
+END $$
+
+DELIMITER ;
+
+********* OUTPUT **********
+
+
+mysql> call pro(10,2);
++---------------------------------------------+
+| Result                                      |
++---------------------------------------------+
+| product is not equal to or greater than 100 |
++---------------------------------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+mysql> call pro(10,20);
++-----------------------------------------+
+| Result                                  |
++-----------------------------------------+
+| product is equal to or greater than 100 |
++-----------------------------------------+
+1 row in set (0.00 sec)
+
+Query OK, 0 rows affected (0.00 sec)
+
+

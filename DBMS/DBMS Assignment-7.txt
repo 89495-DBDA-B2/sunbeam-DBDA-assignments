@@ -1,0 +1,381 @@
+Database Technologies – Assignment 7
+Use appropriate joins to solve following queries.
+Note : To solve below queries use “sales” database
+
+
+Q.1 Write a query that lists each order number followed by the name of the customer who made the order.
+Ans. 
+
+mysql> SELECT o.onum, c.cname FROM orders o JOIN customers c ON o.cnum = c.cnum;
++------+----------+
+| onum | cname    |
++------+----------+
+| 3001 | Cisneros |
+| 3003 | Hoffman  |
+| 3002 | Pereira  |
+| 3005 | Liu      |
+| 3006 | Cisneros |
+| 3009 | Giovanni |
+| 3007 | Grass    |
+| 3008 | Clemens  |
+| 3010 | Grass    |
+| 3011 | Clemens  |
++------+----------+
+10 rows in set (0.00 sec)
+
+
+
+2. Write a query that gives the names of both the salesperson and the customer for each order along with the order number.
+Ans.
+mysql> SELECT 
+    ->     o.onum AS order_number,
+    ->     c.cname AS customer_name,
+    ->     s.sname AS salesperson_name
+    -> FROM 
+    ->     orders o
+    -> JOIN 
+    ->     customers c ON o.cnum = c.cnum
+    -> JOIN 
+    ->     salespeople s ON o.snum = s.snum;
++--------------+---------------+------------------+
+| order_number | customer_name | salesperson_name |
++--------------+---------------+------------------+
+|         3003 | Hoffman       | Peel             |
+|         3009 | Giovanni      | Axelrod          |
+|         3005 | Liu           | Serres           |
+|         3010 | Grass         | Serres           |
+|         3007 | Grass         | Serres           |
+|         3011 | Clemens       | Peel             |
+|         3008 | Clemens       | Peel             |
+|         3006 | Cisneros      | Rifkin           |
+|         3001 | Cisneros      | Rifkin           |
+|         3002 | Pereira       | Motika           |
++--------------+---------------+------------------+
+10 rows in set (0.00 sec)
+
+
+
+Q.3 Write a query that produces all customers serviced by salespeople with a commission above 12%. Output the customer’s name, the salesperson’s name, and the salesperson’s rate of commission.
+Ans.
+
+
+mysql> select c.cname,s.sname,s.comm from customers c JOIN salespeople s ON s.snum=c.snum where s.comm > 0.12;
++----------+--------+------+
+| cname    | sname  | comm |
++----------+--------+------+
+| Liu      | Serres | 0.13 |
+| Grass    | Serres | 0.13 |
+| Cisneros | Rifkin | 0.15 |
++----------+--------+------+
+3 rows in set (0.00 sec)
+
+
+
+
+4. Write a query that calculates the amount of the salesperson’s commission on each order by a customer with a rating above 100.
+Ans.
+
+mysql> select o.onum,s.comm from orders o JOIN salespeople s ON s.snum=o.snum
+JOIN customers c ON  o.cnum=c.cnum where c.rating > 100;
++------+------+
+| onum | comm |
++------+------+
+| 3010 | 0.13 |
+| 3007 | 0.13 |
+| 3005 | 0.13 |
+| 3006 | 0.15 |
+| 3001 | 0.15 |
+| 3009 | 0.10 |
++------+------+
+6 rows in set (0.00 sec)
+
+
+
+
+5. Write a query that produces all pairs of salespeople who are living in the same city.Exclude combinations of salespeople with themselves as well as duplicate rowswith the order reversed.
+Ans.
+
+SELECT 
+    s1.sname AS salesperson_1,
+    s2.sname AS salesperson_2,
+    s1.city
+FROM 
+    salespeople s1
+JOIN 
+    salespeople s2 
+    ON s1.city = s2.city AND s1.snum < s2.snum;
+
++---------------+---------------+--------+
+| salesperson_1 | salesperson_2 | city   |
++---------------+---------------+--------+
+| Peel          | Motika        | London |
++---------------+---------------+--------+
+1 row in set (0.00 sec)
+
+
+
+*******   PART-2   *******
+ 
+Note : To solve below queries use “spj” database
+
+
+Q.1 Display the Supplier name and the Quantity sold.
+Ans.
+
+mysql> select s.Sname,sum(q.QTY) from S s JOIN sp q On s.`S#`=q.`S#` GROUP BY s.Sname;
++-------+------------+
+| Sname | sum(q.QTY) |
++-------+------------+
+| Smith |        900 |
+| Jones |       3200 |
+| Blake |        700 |
+| Clark |        600 |
+| Adams |       3100 |
++-------+------------+
+5 rows in set (0.01 sec)
+
+
+Q.2 Display the Part name and Quantity sold.
+Ans.
+
+mysql> select p.Pname,sum(q.QTY) from P p JOIN sp q ON p.`P#`=q.`P#` GROUP BY p.Pname;
++-------+------------+
+| Pname | sum(q.QTY) |
++-------+------------+
+| Nut   |       1000 |
+| Screw |       4800 |
+| Cam   |       1100 |
+| Cog   |       1300 |
+| Bold  |        300 |
++-------+------------+
+5 rows in set (0.00 sec)
+
+
+
+
+Q.3 Display the Job name and Quantity sold.
+Ans.
+
+mysql> select j.Jname,sum(q.QTY) from J j JOIN sp q ON j.`J#`=q.`J#` GROUP BY Jname;
+
++----------+------------+
+| Jname    | sum(q.QTY) |
++----------+------------+
+| Sorter   |        800 |
+| Console  |       3300 |
+| Punch    |       1200 |
+| Reader   |        500 |
+| Collator |       1100 |
+| Terminal |        400 |
+| Tape     |       1200 |
++----------+------------+
+7 rows in set (0.00 sec)
+
+
+
+
+Q.4 Display the Supplier name, Part name, Job name and Quantity sold.
+Ans.
+
+
+mysql> select q.QTY,s.Sname,p.Pname,j.Jname from sp q JOIN S s ON q.`S#`=s.`S#`JOIN P p ON q.`P#`=p.`P#` JOIN J j ON q.`J#`=j.`J#`;
++------+-------+-------+----------+
+| QTY  | Sname | Pname | Jname    |
++------+-------+-------+----------+
+|  400 | Jones | Screw | Sorter   |
+|  200 | Blake | Screw | Sorter   |
+|  200 | Smith | Nut   | Sorter   |
+|  200 | Adams | Cog   | Punch    |
+|  100 | Jones | Cam   | Punch    |
+|  500 | Blake | Screw | Punch    |
+|  200 | Jones | Screw | Punch    |
+|  200 | Adams | Bold  | Punch    |
+|  300 | Clark | Cog   | Reader   |
+|  200 | Jones | Screw | Reader   |
+|  500 | Adams | Cog   | Console  |
+|  400 | Adams | Cam   | Console  |
+|  800 | Adams | Screw | Console  |
+|  500 | Jones | Screw | Console  |
+|  200 | Adams | Screw | Console  |
+|  100 | Adams | Bold  | Console  |
+|  700 | Smith | Nut   | Console  |
+|  100 | Adams | Nut   | Console  |
+|  500 | Adams | Cam   | Collator |
+|  600 | Jones | Screw | Collator |
+|  400 | Jones | Screw | Terminal |
+|  300 | Clark | Cog   | Tape     |
+|  100 | Adams | Cam   | Tape     |
+|  800 | Jones | Screw | Tape     |
++------+-------+-------+----------+
+24 rows in set (0.00 sec)
+
+
+Q.5 Display the Supplier name, Supplying Parts to a Job in the same City.
+Ans.
+
+mysql>  select distinct s.sname from S s join P p on s.city=p.city join J j on j.city=p.city;
++-------+
+| sname |
++-------+
+| Jones |
+| Blake |
+| Smith |
+| Clark |
++-------+
+4 rows in set (0.00 sec)
+
+
+
+Q.6 Display the Part name that is ‘Red’ is color, and the Quantity sold.
+Ans.
+
+mysql> select p.Pname,sum(s.QTY) from P p JOIN sp s ON p.`P#`=s.`P#` where p.color='Red' GROUP BY p.Pname;
++-------+------------+
+| Pname | sum(s.QTY) |
++-------+------------+
+| Nut   |       1000 |
+| Screw |       1300 |
+| Cog   |       1300 |
++-------+------------+
+3 rows in set (0.00 sec)
+
+
+Q.7 Display all the Quantity sold by Suppliers with the Status = 20.
+Ans.
+
+mysql> select s.Sname,sum(q.QTY) from sp q JOIN S s ON q.`S#`=s.`S#` where s.status=20 GROUP BY s.Sname;
++-------+------------+
+| Sname | sum(q.QTY) |
++-------+------------+
+| Smith |        900 |
+| Clark |        600 |
++-------+------------+
+2 rows in set (0.00 sec)
+
+
+Q.8 Display all the Parts and Quantity with a Weight > 14.
+Ans
+
+mysql> select p.Pname,sum(q.QTY) from P p JOIN sp q ON p.`P#`=q.`P#` where p.weight > 14 GROUP BY p.Pname;
++-------+------------+
+| Pname | sum(q.QTY) |
++-------+------------+
+| Screw |       3500 |
+| Cog   |       1300 |
+| Bold  |        300 |
++-------+------------+
+3 rows in set (0.00 sec)
+
+
+
+Q.9 Display all the Job names and City, which has bought more than 500 Parts.
+Ans.
+
+
+mysql> select j.Jname, j.city,sum(s.QTY) from J j JOIN sp s ON s.`J#`=j.`J#` GROUP BY j.Jname,j.city HAVING sum(s.QTY) > 500;
++----------+--------+------------+
+| Jname    | city   | sum(s.QTY) |
++----------+--------+------------+
+| Sorter   | Paris  |        800 |
+| Console  | Athens |       3300 |
+| Punch    | Rome   |       1200 |
+| Collator | London |       1100 |
+| Tape     | London |       1200 |
++----------+--------+--------
+
+
+Q.10 Display all the Part names and Quantity sold that have a Weight less than 15.
+Ans.
+
+mysql> select P.Pname,sum(sp.QTY) from P JOIN sp ON P.`P#`=sp.`P#` where P.wei
+ght <15 GROUP BY P.Pname;
++-------+-------------+
+| Pname | sum(sp.QTY) |
++-------+-------------+
+| Nut   |        1000 |
+| Cam   |        1100 |
+| Screw |        1300 |
++-------+-------------+
+3 rows in set (0.01 sec)
+
+
+Q.11 Display all the Suppliers with the same Status as the supplier, ‘CLARK’.
+Ans.
+
+
+mysql> SELECT DISTINCT S1.Sname, S1.status   FROM S S1 JOIN S S2 ON S1.status = S2.status WHERE S2.Sname = 'Clark' AND S1.Sname <> 'Clark';
++-------+--------+
+| Sname | status |
++-------+--------+
+| Smith |     20 |
++-------+--------+
+1 row in set (0.00 sec)
+
+
+
+Q.12 Display all the Parts which have more Weight than any Red parts.
+Ans.
+
+mysql> SELECT DISTINCT P1.Pname,P1.weight,P1.color  FROM P P1 JOIN P P2 ON P2.color = 'Red'  WHERE P1.weight > P2.weight;
++-------+--------+-------+
+| Pname | weight | color |
++-------+--------+-------+
+| Bold  |     17 | Green |
+| Screw |     17 | Blue  |
+| Screw |     14 | Red   |
+| Cog   |     19 | Red   |
++-------+--------+-------+
+4 rows in set (0.00 sec)
+
+
+Q.13 Display all the Jobs going on in the same city as the job ‘TAPE’.
+Ans.
+
+mysql> SELECT DISTINCT J1.Jname,J1.city FROM J J1 JOIN J J2 ON J1.City = J2.City WHERE J2.Jname='Tape' AND J1.Jname <> 'Tape';
++----------+--------+
+| Jname    | city   |
++----------+--------+
+| Collator | London |
++----------+--------+
+1 row in set (0.01 sec)
+
+
+Q.14 Display all the Parts with Weight less than any the Green parts.
+Ans.
+
+mysql> select DISTINCT P1.Pname,P1.weight,P1.color from P P1 JOIN P P2 ON P2.color='Green' WHERE P1.weight < P2.weight;
++-------+--------+-------+
+| Pname | weight | color |
++-------+--------+-------+
+| Nut   |     12 | Red   |
+| Screw |     14 | Red   |
+| Cam   |     12 | Blue  |
++-------+--------+-------+
+3 rows in set (0.00 sec)
+
+
+Q.15 Display the name of the Supplier who has sold the maximum Quantity (in one sale).
+Ans.
+
+mysql> select S.Sname,max(sp.QTY) from S JOIN sp ON S.`S#`=sp.`S#` GROUP BY S.Sname Order by max(sp.QTY) DESC LIMIT 1;
++-------+-------------+
+| Sname | max(sp.QTY) |
++-------+-------------+
+| Adams |         800 |
++-------+-------------+
+1 row in set (0.00 sec)
+
+
+
+Q.16 Display the name of the Supplier who has sold the maximum overall Quantity (sumof Sales).
+Ans.
+
+
+mysql> select S.Sname,sum(sp.QTY) from S JOIN sp ON S.`S#`=sp.`S#` GROUP BY S.Sname Order by sum(sp.QTY) DESC LIMIT 1;
++-------+-------------+
+| Sname | sum(sp.QTY) |
++-------+-------------+
+| Jones |        3200 |
++-------+-------------+
+1 row in set (0.00 sec)
+

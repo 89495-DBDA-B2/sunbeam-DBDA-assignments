@@ -1,0 +1,13 @@
+Q1) Store book details in a library in hashing based data structure : HashSet 
+Book details : 
+isbn(string),category(enum),price(double),publishDate,authorName(string),q
+ uantity(int) 
+Unique ID : isbn 
+Accept at least 5 book details from user & display. 
+
+
+Q2)  Store details from HashSet into LinkedHashSet , to confirm order of 
+insertion. 
+
+
+Q3) Sort the book details as per publish date and display it. 

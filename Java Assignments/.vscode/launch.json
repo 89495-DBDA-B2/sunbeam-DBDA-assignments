@@ -1,0 +1,84 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Current File",
+            "request": "launch",
+            "mainClass": "${file}"
+        },
+        {
+            "type": "java",
+            "name": "CreditLimitCalculator",
+            "request": "launch",
+            "mainClass": "CreditLimitCalculator",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "DoubleValue",
+            "request": "launch",
+            "mainClass": "DoubleValue",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "PalindromeNumber",
+            "request": "launch",
+            "mainClass": "PalindromeNumber",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "TrafficLightTest",
+            "request": "launch",
+            "mainClass": "TrafficLightTest",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "WordCount",
+            "request": "launch",
+            "mainClass": "WordCount",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "except",
+            "request": "launch",
+            "mainClass": "except",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "food_menu",
+            "request": "launch",
+            "mainClass": "food_menu",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "num",
+            "request": "launch",
+            "mainClass": "num",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "reverse_string",
+            "request": "launch",
+            "mainClass": "reverse_string",
+            "projectName": "Java Assignments_ce337a07"
+        },
+        {
+            "type": "java",
+            "name": "TestPoint",
+            "request": "launch",
+            "mainClass": "tester.TestPoint",
+            "projectName": "Java Assignments_ce337a07"
+        }
+    ]
+}

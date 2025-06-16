@@ -1,0 +1,171 @@
+Day-02
+
+A. Retrieve the names of all customers who made a purchase.
+
+Ans. 
+select C.Name from Customers C JOIN Sales S where C.CustomerID= S.CustomerID;
+
++----------------+
+|     c.name     |
++----------------+
+| John Doe       |
+| Jane Smith     |
+| Bob Johnson    |
+| Alice Brown    |
+| Charlie Davis  |
++----------------+
+
+
+B. List the products and their total sales amounts for a given date range.
+
+Ans.
+
+SELECT p.ProductName, SUM(s.TotalAmount) AS TotalSales FROM Sales s JOIN Products p ON s.ProductID=p.ProductID WHERE s.SalesDate BETWEEN '2023-01-01' AND '2023-01-31' GROUP BY p.ProductName;
+
++----------------+-------------+
+| p.productname  | totalsales  |
++----------------+-------------+
+| Laptop         | 1600.00     |
+| Smartphone     | 400.00      |
+| T-shirt        | 60.00       |
++----------------+-------------+
+
+
+C. Find the total sales amount for each product category.
+ 
+Ans. 
+
+SELECT p.Category, SUM(s.TotalAmount) AS TotalSales
+FROM Sales s
+JOIN Products p ON s.ProductID = p.ProductID
+GROUP BY p.Category;
+
++--------------+-------------+
+|  p.category  | totalsales  |
++--------------+-------------+
+| Clothing     | 60.00       |
+| Electronics  | 2000.00     |
+| Footwear     | 100.00      |
+| Furniture    | 150.00      |
++--------------+-------------+
+
+
+
+D. Identify the customers who made purchases in a speciﬁc city.
+
+SELECT DISTINCT c.Name FROM Customers c JOIN Locations l ON c.LocationID=l.LocationID WHERE l.city='Pune';
+
++--------------+---------+
+|    c.name    | l.city  |
++--------------+---------+
+| John Doe     | Pune    |
+| Bob Johnson  | Pune    |
++--------------+---------+
+
+
+
+E. Calculate the average age of customers who bought products in the 'Electronics' category.
+
+Ans.
+
+SELECT AVG(c.Age) FROM Customers c 
+JOIN Sales s ON c.CustomerID=s.CustomerID 
+JOIN Products p ON s.ProductID=p.ProductID
+WHERE p.Category='Electronics';
+
++-------------+
+| averageage  |
++-------------+
+| 32.5        |
++-------------+
+
+
+
+F. List the top 3 products based on total sales amount.
+
+Ans.
+
+SELECT p.ProductName, SUM(s.TotalAmount) AS TotalSales
+FROM Products p 
+JOIN Sales s ON p.ProductID = s.ProductID 
+GROUP BY p.ProductName
+ORDER BY TotalSales DESC 
+LIMIT 3;
+
+
++----------------+-------------+
+| p.productname  | totalsales  |
++----------------+-------------+
+| Laptop         | 1600.00     |
+| Smartphone     | 400.00      |
+| Bookshelf      | 150.00      |
++----------------+-------------+
+
+
+G. Find the total sales amount for each month.
+
+Ans.
+
+SELECT MONTH(s.SaleDate) AS SaleMonth, SUM(s.TotalAmount) AS TotalSales
+FROM Sales s
+GROUP BY MONTH(s.SaleDate)
+ORDER BY SaleMonth;
+
++------------+-------------+
+| salemonth  | totalsales  |
++------------+-------------+
+| 1          | 2060.00     |
+| 2          | 250.00      |
++------------+-------------+
+
+
+
+H. Identify the products with no sales.
+
+Ans.
+
+SELECT p.ProductName
+FROM Products p
+LEFT JOIN Sales s ON p.ProductID = s.ProductID
+WHERE s.SaleID IS NULL;
+
++----------------+
+| p.productname  |
++----------------+
++----------------+
+
+
+
+I. Calculate the total sales amount for each state.
+Ans.
+
+SELECT l.State, SUM(s.TotalAmount) AS TotalSales
+FROM Sales s
+JOIN Customers c ON s.CustomerID = c.CustomerID
+JOIN Locations l ON c.LocationID = l.LocationID
+GROUP BY l.State;
+
++--------------+-------------+
+|   l.state    | totalsales  |
++--------------+-------------+
+| Karnataka    | 100.00      |
+| Maharashtra  | 2210.00     |
++--------------+-------------+
+
+
+
+J. Retrieve the customer names and their highest purchase amount.
+Ans.
+
+SELECT c.Name,MAX(s.TotalAmount) AS MaxPurchase FROM Customers c JOIN Sales s ON c.CustomerID=s.CustomerID GROUP BY c.Name;
+
++----------------+--------------+
+|     c.name     | maxpurchase  |
++----------------+--------------+
+| Alice Brown    | 100.00       |
+| Bob Johnson    | 400.00       |
+| Charlie Davis  | 150.00       |
+| Jane Smith     | 60.00        |
+| John Doe       | 1600.00      |
++----------------+--------------+
+

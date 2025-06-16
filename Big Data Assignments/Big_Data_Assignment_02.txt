@@ -1,0 +1,103 @@
+Day-03
+
+1. Count number of employees per dept per group. Print all combinations of subtotals and grand totals.
+
+Ans.
+
+SELECT deptno, job, COUNT(*) AS emp_count
+FROM emp
+GROUP BY deptno, job
+WITH ROLLUP;
+
++---------+------------+------------+
+| deptno  |    job     | emp_count  |
++---------+------------+------------+
+| NULL    | NULL       | 14         |
+| 10      | NULL       | 3          |
+| 20      | NULL       | 5          |
+| 30      | NULL       | 6          |
+| 20      | ANALYST    | 2          |
+| 10      | CLERK      | 1          |
+| 20      | CLERK      | 2          |
+| 30      | CLERK      | 1          |
+| 10      | MANAGER    | 1          |
+| 20      | MANAGER    | 1          |
+| 30      | MANAGER    | 1          |
+| 10      | PRESIDENT  | 1          |
+| 30      | SALESMAN   | 4          |
++---------+------------+------------+
+
+
+
+2. Display only subtotals of deptwise employees and groupwise employees (count).
+
+Ans. 
+
+SELECT deptno, job, COUNT(*) AS emp_count
+FROM emp
+GROUP BY deptno, job
+WITH ROLLUP
+HAVING deptno IS NULL OR job IS NULL
+ AND NOT (deptno IS NULL AND job IS NULL);
+
++---------+-------+------------+
+| deptno  |  job  | emp_count  |
++---------+-------+------------+
+| NULL    | NULL  | 14         |
+| 10      | NULL  | 3          |
+| 20      | NULL  | 5          |
+| 30      | NULL  | 6          |
++---------+-------+------------+
+
+
+
+3. Print number of contacts per district.
+Ans.
+
+
+SELECT addr.dist AS district,
+COUNT(*) AS num_contacts
+FROM contacts
+GROUP BY addr.dist
+ORDER BY num_contacts DESC;
+
+
++-----------+---------------+
+| district  | num_contacts  |
++-----------+---------------+
+| pune      | 2             |
+| karad     | 1             |
++-----------+---------------+
+
+
+
+4. Find hottest and coolest month from ncdc data.
+
+Ans. 
+
+(SELECT yr, AVG(temp) FROM ncdc_staging
+WHERE quality IN (0, 1, 2, 4, 5, 9) AND temp != 9999
+GROUP BY yr
+
+ORDER BY AVG(temp) DESC
+LIMIT 1)
+UNION
+(SELECT yr, AVG(temp) FROM ncdc_staging
+WHERE quality IN (0, 1, 2, 4, 5, 9) AND temp != 9999
+GROUP BY yr
+
+ORDER BY AVG(temp) ASC
+LIMIT 1);
+
+
+
++---------+---------------------+
+| _u1.yr  |       _u1._c1       |
++---------+---------------------+
+| 1903    | 48.241744739671326  |
+| 1915    | 5.098548073625243   |
++---------+---------------------+
+
+
+
+

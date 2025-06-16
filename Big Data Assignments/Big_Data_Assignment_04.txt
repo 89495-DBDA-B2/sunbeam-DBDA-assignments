@@ -1,0 +1,618 @@
+Day-04
+
+Q.2. Execute following queries on "emp" and "dept" dataset.
+
+1. Create table "emp_staging" and load data from emp.csv in it.
+Ans:
+
+CREATE TABLE emp_staging (
+  empno INT,
+  ename STRING,
+  job STRING,
+  mgr INT,
+  hiredate STRING,
+  sal FLOAT,
+  comm FLOAT,
+  deptno INT
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH '/path/to/emp.csv' INTO TABLE emp_staging;
+
+
+2. Create table "dept_staging" and load data from dept.csv in it.
+Ans:
+
+CREATE TABLE dept_staging (
+  deptno INT,
+  dname STRING,
+  loc STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+LOAD DATA LOCAL INPATH '/path/to/dept.csv' INTO TABLE dept_staging;
+
+
+3. Display dept name and number of emps in each dept.
+Ans:
+
+SELECT d.dname, COUNT(e.empno) AS emp_count
+FROM dept_staging d
+LEFT JOIN emp_staging e ON d.deptno = e.deptno
+GROUP BY d.dname;
+
+
+ACCOUNTING	3
+OPERATIONS	0
+RESEARCH	5
+SALES	6
+
+4. Display emp name and his dept name.
+Ans:
+
+SELECT e.ename, d.dname
+FROM emp_staging e
+JOIN dept_staging d ON e.deptno = d.deptno;
+
+SMITH	RESEARCH
+ALLEN	SALES
+WARD	SALES
+JONES	RESEARCH
+MARTIN	SALES
+BLAKE	SALES
+CLARK	ACCOUNTING
+SCOTT	RESEARCH
+KING	ACCOUNTING
+TURNER	SALES
+ADAMS	RESEARCH
+JAMES	SALES
+FORD	RESEARCH
+MILLER	ACCOUNTING
+
+
+
+
+5. Display all emps (name, job, deptno) with their manager (name, job, deptno), who are not in their department.
+Ans:
+
+SELECT e.ename AS emp_name, e.job AS emp_job, e.deptno AS emp_deptno,
+       m.ename AS mgr_name, m.job AS mgr_job, m.deptno AS mgr_deptno
+FROM emp_staging e
+JOIN emp_staging m ON e.mgr = m.empno
+WHERE e.deptno != m.deptno;
+
+
+JONES	MANAGER	20	KING	PRESIDENT	10
+BLAKE	MANAGER	30	KING	PRESIDENT	10
+
+
+6. Display all manager names with list of all dept names (where they can work).
+Ans:
+
+
+SELECT DISTINCT m.ename AS manager_name, d.dname AS dept_name
+FROM emp_staging e
+JOIN emp_staging m ON e.mgr = m.empno
+JOIN dept_staging d;
+
++---------------+-------------+
+| manager_name  |  dept_name  |
++---------------+-------------+
+| BLAKE         | ACCOUNTING  |
+| BLAKE         | OPERATIONS  |
+| BLAKE         | RESEARCH    |
+| BLAKE         | SALES       |
+| CLARK         | ACCOUNTING  |
+| CLARK         | OPERATIONS  |
+| CLARK         | RESEARCH    |
+| CLARK         | SALES       |
+| FORD          | ACCOUNTING  |
+| FORD          | OPERATIONS  |
+| FORD          | RESEARCH    |
+| FORD          | SALES       |
+| JONES         | ACCOUNTING  |
+| JONES         | OPERATIONS  |
+| JONES         | RESEARCH    |
+| JONES         | SALES       |
+| KING          | ACCOUNTING  |
+| KING          | OPERATIONS  |
+| KING          | RESEARCH    |
+| KING          | SALES       |
+| SCOTT         | ACCOUNTING  |
+| SCOTT         | OPERATIONS  |
+| SCOTT         | RESEARCH    |
+| SCOTT         | SALES       |
++---------------+-------------+
+
+
+
+7. Display job-wise total salary along with total salary of all employees.
+Ans:
+
+SELECT job, SUM(sal) AS job_total_salary
+FROM emp_staging
+GROUP BY job
+UNION ALL
+SELECT 'Total', SUM(sal) FROM emp_staging;
+
++------------+-----------------------+
+|  _u1.job   | _u1.job_total_salary  |
++------------+-----------------------+
+| ANALYST    | 6000.00               |
+| CLERK      | 4150.00               |
+| MANAGER    | 8275.00               |
+| PRESIDENT  | 5000.00               |
+| SALESMAN   | 5600.00               |
+| Total      | 29025.00              |
++------------+-----------------------+
+
+
+8. Display dept-wise total salary along with total salary of all employees.
+Ans:
+
+SELECT d.dname, SUM(e.sal) AS dept_total_salary
+FROM emp_staging e
+JOIN dept_staging d ON e.deptno = d.deptno
+GROUP BY d.dname
+UNION ALL
+SELECT 'Total', SUM(sal) FROM emp_staging;
+
+
++-------------+------------------------+
+|  _u1.dname  | _u1.dept_total_salary  |
++-------------+------------------------+
+| ACCOUNTING  | 8750.00                |
+| RESEARCH    | 10875.00               |
+| SALES       | 9400.00                |
+| Total       | 29025.00               |
++-------------+------------------------+
+
+
+9. Display per dept job-wise total salary along with total salary of all employees.
+Ans:
+
+SELECT d.dname, e.job, SUM(e.sal) AS total_sal
+FROM emp_staging e
+JOIN dept_staging d ON e.deptno = d.deptno
+GROUP BY d.dname, e.job
+UNION ALL
+SELECT 'ALL', 'ALL', SUM(sal) FROM emp_staging;
+
+
++-------------+------------+----------------+
+|  _u1.dname  |  _u1.job   | _u1.total_sal  |
++-------------+------------+----------------+
+| RESEARCH    | ANALYST    | 6000.00        |
+| ACCOUNTING  | CLERK      | 1300.00        |
+| RESEARCH    | CLERK      | 1900.00        |
+| SALES       | CLERK      | 950.00         |
+| ACCOUNTING  | MANAGER    | 2450.00        |
+| RESEARCH    | MANAGER    | 2975.00        |
+| SALES       | MANAGER    | 2850.00        |
+| ACCOUNTING  | PRESIDENT  | 5000.00        |
+| SALES       | SALESMAN   | 5600.00        |
+| ALL         | ALL        | 29025.00       |
++-------------+------------+----------------+
+
+
+10. Display number of employees recruited per year in descending order of employee count.
+Ans:
+
+SELECT 
+  YEAR(FROM_UNIXTIME(UNIX_TIMESTAMP(hire, 'dd-MMM-yy'))) AS hire_year,
+  COUNT(*) AS emp_count
+FROM emp_staging
+GROUP BY YEAR(FROM_UNIXTIME(UNIX_TIMESTAMP(hire, 'dd-MMM-yy')))
+ORDER BY emp_count DESC;
+
+
++------------+------------+
+| hire_year  | emp_count  |
++------------+------------+
+| 1981       | 10         |
+| 1982       | 2          |
+| 1983       | 1          |
+| 1980       | 1          |
++------------+------------+
+
+
+11. Display unique job roles who gets commission.
+Ans:
+
+SELECT DISTINCT job
+FROM emp_staging
+WHERE comm IS NOT NULL AND comm > 0;
+
++-----------+
+|    job    |
++-----------+
+| SALESMAN  |
++-----------+
+
+
+
+12. Display dept name in which there is no employee (using sub-query).
+Ans:
+
+SELECT d.dname
+FROM dept_staging d
+WHERE d.deptno NOT IN (SELECT DISTINCT deptno FROM emp_staging);
+
++-------------+
+|   d.dname   |
++-------------+
+| OPERATIONS  |
++-------------+
+
+
+13. Display emp-name, dept-name, salary, total salary of that dept (using sub-query).
+Ans:
+
+
+SELECT e.ename, d.dname, e.sal,
+       (SELECT SUM(sal) FROM emp_staging e2 WHERE e2.deptno = e.deptno) AS dept_total_sal
+FROM emp_staging e
+JOIN dept_staging d ON e.deptno = d.deptno;
+
+
++----------+-------------+----------+-----------------+
+| e.ename  |   d.dname   |  e.sal   | dept_total_sal  |
++----------+-------------+----------+-----------------+
+| SMITH    | RESEARCH    | 800.00   | 10875.00        |
+| ALLEN    | SALES       | 1600.00  | 9400.00         |
+| WARD     | SALES       | 1250.00  | 9400.00         |
+| JONES    | RESEARCH    | 2975.00  | 10875.00        |
+| MARTIN   | SALES       | 1250.00  | 9400.00         |
+| BLAKE    | SALES       | 2850.00  | 9400.00         |
+| CLARK    | ACCOUNTING  | 2450.00  | 8750.00         |
+| SCOTT    | RESEARCH    | 3000.00  | 10875.00        |
+| KING     | ACCOUNTING  | 5000.00  | 8750.00         |
+| TURNER   | SALES       | 1500.00  | 9400.00         |
+| ADAMS    | RESEARCH    | 1100.00  | 10875.00        |
+| JAMES    | SALES       | 950.00   | 9400.00         |
+| FORD     | RESEARCH    | 3000.00  | 10875.00        |
+| MILLER   | ACCOUNTING  | 1300.00  | 8750.00         |
++----------+-------------+----------+-----------------+
+
+
+
+14. Display all managers and presidents along with number of (immediate) subbordinates.
+Ans:
+
+SELECT m.ename AS manager_name, m.job, COUNT(e.empno) AS subordinates
+FROM emp_staging m
+LEFT JOIN emp_staging e ON m.empno = e.mgr
+WHERE m.job IN ('MANAGER', 'PRESIDENT')
+GROUP BY m.ename, m.job;
+
+
++---------------+------------+---------------+
+| manager_name  |   m.job    | subordinates  |
++---------------+------------+---------------+
+| BLAKE         | MANAGER    | 5             |
+| CLARK         | MANAGER    | 1             |
+| JONES         | MANAGER    | 2             |
+| KING          | PRESIDENT  | 3             |
++---------------+------------+---------------+
+
+
+
+
+
+
+Q.3. Execute following queries on "emp" and "dept" dataset using CTE.
+
+
+1. Find emp with max sal of each dept.
+Ans:
+
+SELECT e.empno, e.ename, e.sal Max_Salary, e.deptno
+FROM emp e
+WHERE e.sal = (
+  SELECT MAX(sal) FROM emp WHERE deptno = e.deptno
+);
+
++----------+----------+-------------+-----------+
+| e.empno  | e.ename  | max_salary  | e.deptno  |
++----------+----------+-------------+-----------+
+| 7839     | KING     | 5000.00     | 10        |
+| 7788     | SCOTT    | 3000.00     | 20        |
+| 7902     | FORD     | 3000.00     | 20        |
+| 7698     | BLAKE    | 2850.00     | 30        |
++----------+----------+-------------+-----------+
+
+
+2. Find avg of deptwise total sal.
+Ans:
+
+SELECT AVG(dept_total) AS avg_dept_total_sal
+FROM (
+  SELECT deptno, SUM(sal) AS dept_total
+  FROM emp
+  GROUP BY deptno
+) AS dept_totals;
+
+
++---------------------+
+| avg_dept_total_sal  |
++---------------------+
+| 9675.00000000000    |
++---------------------+
+
+
+
+
+3. Compare (show side-by-side) sal of each emp with avg sal in his dept and avg sal for his job.
+Ans:
+
+SELECT 
+  e.empno, 
+  e.ename, 
+  e.sal,
+  ROUND(d.avg_dept_sal, 2) AS avg_dept_sal,
+  ROUND(j.avg_job_sal, 2) AS avg_job_sal
+FROM emp e
+JOIN (
+  SELECT deptno, AVG(sal) AS avg_dept_sal
+  FROM emp
+  GROUP BY deptno
+) d ON e.deptno = d.deptno
+JOIN (
+  SELECT job, AVG(sal) AS avg_job_sal
+  FROM emp
+  GROUP BY job
+) j ON e.job = j.job;
+
+
+
++----------+----------+----------+---------------+--------------+
+| e.empno  | e.ename  |  e.sal   | avg_dept_sal  | avg_job_sal  |
++----------+----------+----------+---------------+--------------+
+| 7782     | CLARK    | 2450.00  | 2916.67       | 2758.33      |
+| 7839     | KING     | 5000.00  | 2916.67       | 5000.00      |
+| 7934     | MILLER   | 1300.00  | 2916.67       | 1037.50      |
+| 7369     | SMITH    | 800.00   | 2175.00       | 1037.50      |
+| 7566     | JONES    | 2975.00  | 2175.00       | 2758.33      |
+| 7788     | SCOTT    | 3000.00  | 2175.00       | 3000.00      |
+| 7876     | ADAMS    | 1100.00  | 2175.00       | 1037.50      |
+| 7902     | FORD     | 3000.00  | 2175.00       | 3000.00      |
+| 7499     | ALLEN    | 1600.00  | 1566.67       | 1400.00      |
+| 7521     | WARD     | 1250.00  | 1566.67       | 1400.00      |
+| 7654     | MARTIN   | 1250.00  | 1566.67       | 1400.00      |
+| 7698     | BLAKE    | 2850.00  | 1566.67       | 2758.33      |
+| 7844     | TURNER   | 1500.00  | 1566.67       | 1400.00      |
+| 7900     | JAMES    | 950.00   | 1566.67       | 1037.50      |
++----------+----------+----------+---------------+--------------+
+
+
+
+4. Divide emps by category -- Poor < 1500, 1500 <= Middle <= 2500, Rich > 2500. Hint: CASE ... WHEN. Count emps for each category.
+Ans:
+
+SELECT
+  CASE
+    WHEN sal < 1500 THEN 'Poor'
+    WHEN sal BETWEEN 1500 AND 2500 THEN 'Middle'
+    ELSE 'Rich'
+  END AS category,
+  COUNT(*) AS emp_count
+FROM emp
+GROUP BY
+  CASE
+    WHEN sal < 1500 THEN 'Poor'
+    WHEN sal BETWEEN 1500 AND 2500 THEN 'Middle'
+    ELSE 'Rich'
+  END;
+
+
++-----------+------------+
+| category  | emp_count  |
++-----------+------------+
+| Middle    | 9          |
+| Poor      | 18         |
+| Rich      | 15         |
++-----------+------------+
+
+
+
+
+
+5. Display emps with category (as above), empno, ename, sal and dname.
+Ans:
+
+
+SELECT
+  e.empno,
+  e.ename,
+  e.sal,
+  d.dname,
+  CASE
+    WHEN e.sal < 1500 THEN 'Poor'
+    WHEN e.sal BETWEEN 1500 AND 2500 THEN 'Middle'
+    ELSE 'Rich'
+  END AS category
+FROM emp e
+JOIN dept d ON e.deptno = d.deptno;
+
+
++----------+----------+----------+-------------+-----------+
+| e.empno  | e.ename  |  e.sal   |   d.dname   | category  |
++----------+----------+----------+-------------+-----------+
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7369     | SMITH    | 800.00   | RESEARCH    | Poor      |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7499     | ALLEN    | 1600.00  | SALES       | Middle    |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7521     | WARD     | 1250.00  | SALES       | Poor      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7566     | JONES    | 2975.00  | RESEARCH    | Rich      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7654     | MARTIN   | 1250.00  | SALES       | Poor      |
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
++----------+----------+----------+-------------+-----------+
+| e.empno  | e.ename  |  e.sal   |   d.dname   | category  |
++----------+----------+----------+-------------+-----------+
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
+| 7698     | BLAKE    | 2850.00  | SALES       | Rich      |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7782     | CLARK    | 2450.00  | ACCOUNTING  | Middle    |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7788     | SCOTT    | 3000.00  | RESEARCH    | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7839     | KING     | 5000.00  | ACCOUNTING  | Rich      |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7844     | TURNER   | 1500.00  | SALES       | Middle    |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7876     | ADAMS    | 1100.00  | RESEARCH    | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7900     | JAMES    | 950.00   | SALES       | Poor      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7902     | FORD     | 3000.00  | RESEARCH    | Rich      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
+| 7934     | MILLER   | 1300.00  | ACCOUNTING  | Poor      |
++----------+----------+----------+-------------+-----------+
+
+
+6. Count number of emps in each dept for each category (as above).
+Ans:
+
+
+SELECT
+  e.deptno,
+  d.dname,
+  CASE
+    WHEN e.sal < 1500 THEN 'Poor'
+    WHEN e.sal BETWEEN 1500 AND 2500 THEN 'Middle'
+    ELSE 'Rich'
+  END AS category,
+  COUNT(*) AS emp_count
+FROM emp e
+JOIN dept d ON e.deptno = d.deptno
+GROUP BY
+  e.deptno,
+  d.dname,
+  CASE
+    WHEN e.sal < 1500 THEN 'Poor'
+    WHEN e.sal BETWEEN 1500 AND 2500 THEN 'Middle'
+    ELSE 'Rich'
+  END
+ORDER BY e.deptno, category;
+
+
++-----------+-------------+-----------+------------+
+| e.deptno  |   d.dname   | category  | emp_count  |
++-----------+-------------+-----------+------------+
+| 10        | ACCOUNTING  | Middle    | 9          |
+| 10        | ACCOUNTING  | Poor      | 9          |
+| 10        | ACCOUNTING  | Rich      | 9          |
+| 20        | RESEARCH    | Poor      | 18         |
+| 20        | RESEARCH    | Rich      | 27         |
+| 30        | SALES       | Middle    | 18         |
+| 30        | SALES       | Poor      | 27         |
+| 30        | SALES       | Rich      | 9          |
++-----------+-------------+-----------+------------+
+
+
+
+

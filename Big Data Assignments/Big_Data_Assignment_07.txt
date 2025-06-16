@@ -1,0 +1,12 @@
+Day- 08
+
+1. Clean NCDC data and write year, temperature and quality data into mysql table.
+2. Read ncdc data from mysql table and print average temperature per year in DESC order.
+3. Load Fire Service Calls Dataset into Spark Managed Table (on beeline).
+4. Load Fire Service Calls (Sample dataset) into Databricks Community edition with pre-deﬁned schema. Repeat all 10 Hive assignments on that dataset. Do
+the assignments using SQL syntax as well as Dataframe syntax. Use Linux command below to create sample dataset.
+terminal> shuf -n 100000 Fire_Department_Calls_for_Service.csv > Fire_Service_Calls_Sample.csv
+5. Movie recommendation using Spark dataframes.
+Hint: config("spark.driver.memory", "4g")
+6. Count number of movie ratings per month using sql query (using temp views).
+7. Implement movie recommendation system using temp views or spark sql (on beeline) or on databricks cloud.

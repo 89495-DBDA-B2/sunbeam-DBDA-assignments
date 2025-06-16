@@ -1,0 +1,160 @@
+Day-05
+
+
+Q.1. Create a transactional ORC table "ﬁre_data" with appropriate data types partitioned by city and buckted by call number into 4 buckets. Load data from
+staging table into this table.
+
+ Step 1: Enable Bucketing and Transactions (if not already)
+
+
+SET hive.enforce.bucketing = true;
+SET hive.exec.dynamic.partition = true;
+SET hive.exec.dynamic.partition.mode = nonstrict;
+SET hive.txn.manager = org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
+SET hive.compactor.initiator.on = true;
+SET hive.compactor.worker.threads = 1;
+
+
+
+Step 2: Create the staging table (if not created already)
+
+
+CREATE TABLE staging_fire_data (
+  call_number INT,
+  unit_id STRING,
+  incident_number STRING,
+  call_type STRING,
+  call_date DATE,
+  watch_date DATE,
+  received_timestamp STRING,
+  entry_timestamp STRING,
+  response_timestamp STRING,
+  neighborhood STRING,
+  city STRING,
+  zip_code INT,
+  battalion STRING,
+  station_area STRING,
+  box STRING,
+  primary_unit STRING,
+  location STRING
+)
+ROW FORMAT DELIMITED
+FIELDS TERMINATED BY ','
+STORED AS TEXTFILE;
+
+
+Step 3: Create the transactional ORC table fire_data
+
+
+
+CREATE TABLE fire_data (
+  call_number INT,
+  unit_id STRING,
+  incident_number STRING,
+  call_type STRING,
+  call_date DATE,
+  watch_date DATE,
+  received_timestamp STRING,
+  entry_timestamp STRING,
+  response_timestamp STRING,
+  neighborhood STRING,
+  zip_code INT,
+  battalion STRING,
+  station_area STRING,
+  box STRING,
+  primary_unit STRING,
+  location STRING
+)
+PARTITIONED BY (city STRING)
+CLUSTERED BY (call_number) INTO 4 BUCKETS
+STORED AS ORC
+TBLPROPERTIES (
+  'transactional' = 'true'
+);
+
+
+
+ Step 4: Load data from staging into fire_data
+
+
+INSERT INTO TABLE fire_data
+PARTITION (city)
+SELECT
+  call_number,
+  unit_id,
+  incident_number,
+  call_type,
+  call_date,
+  watch_date,
+  received_timestamp,
+  entry_timestamp,
+  response_timestamp,
+  neighborhood,
+  zip_code,
+  battalion,
+  station_area,
+  box,
+  primary_unit,
+  location,
+  city
+FROM staging_fire_data;
+
+
+
+
+
+Q.2. Execute following queries on ﬁre dataset.
+
+
+1. How many distinct types of calls were made to the ﬁre department?
+Ans:
+
+
+SELECT COUNT(DISTINCT call_type) AS distinct_call_types
+FROM fire_data;
+
+
++----------------------+
+| distinct_call_types  |
++----------------------+
+| 0                    |
++----------------------+
+
+
+
+2. What are distinct types of calls made to the ﬁre department?
+Ans:
+
+SELECT DISTINCT call_type
+FROM fire_data
+WHERE call_type IS NOT NULL;
+
++------------+
+| call_type  |
++------------+
++------------+
+
+
+3. Find out all responses for delayed times greater than 5 mins?
+
+SELECT *
+FROM fire_data
+WHERE 
+  unix_timestamp(response_timestamp, 'MM/dd/yyyy HH:mm:ss') - unix_timestamp(received_timestamp, 'MM/dd/yyyy HH:mm:ss') > 300;
+
+No rows selected (0.277 seconds)
+
+
+
+
+
+4. What were the most common call types?
+Ans:
+
+
+SELECT call_type, COUNT(*) AS total_calls
+FROM fire_data
+WHERE call_type IS NOT NULL
+GROUP BY call_type
+ORDER BY total_calls DESC
+LIMIT 5;

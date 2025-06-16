@@ -1,0 +1,40 @@
+Day-07
+
+
+1. Wordcount using Spark Dataframes and find top 10 words (except stopwords). Take file from HDFS/S3. Hint: Use explode() function.
+
+
+2. Find max sal, min sal, avg sal, total sal per dept per job in emp.csv file.
+
+
+3. Find deptwise total sal from emp.csv and dept.csv. Print dname and total sal. Hint: use join()
+
+
+4. Count number of movie ratings per year. Hint: convert time column to TIMESTAMP using from_unixtime().
+
+
+5. Load Fire Service Calls with pre-defined schema. Repeat all 10 Hive assignments on that dataset. Do the assignments using Dataframe syntax. Use Linux
+command below to create sample dataset.
+
+
+6. For each department, rank employees by their salary in descending order. Include employee name, department name, salary, and their rank within the
+department. Handle ties so employees with the same salary get the same rank, with the next rank(s) skipped.
+
+
+
+7. Salary Difference from Department Average For each employee, show how much their salary differs from their department's average salary. Also show the
+department's maximum salary.
+Output: ename, dname, sal, dept_avg_sal, sal_diff_from_avg, dept_max_sal
+
+
+
+8. For each department, identify:
+The first employee hired (earliest hire date)
+The last employee hired (most recent hire date)
+The employee hired immediately after each employee (by hire date)
+Output: deptno, dname, ename, hire, first_hire_flag, last_hire_flag, next_hire_employee
+
+
+
+9. Load Fire Service Calls with pre-defined schema. Repeat all 10 Hive assignments on that dataset. Do the assignments using Dataframe syntax. Use Linux
+command below to create sample dataset.

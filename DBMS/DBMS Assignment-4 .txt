@@ -131,6 +131,7 @@ mysql> select * from S ORDER BY city DESC;
 +----+-------+--------+--------+
 5 rows in set (0.00 sec)
 
+
 Q.10 Display the Part Table in the ascending order of CITY and within the city in the ascending order of Part names.
 Ans.
 

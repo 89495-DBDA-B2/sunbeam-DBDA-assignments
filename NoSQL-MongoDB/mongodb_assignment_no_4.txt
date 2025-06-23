@@ -1,0 +1,98 @@
+
+1.Write a MongoDB query to find the restaurant Id, name and grades for those restaurants where the 2nd element of grades array contains a grade of "A" and score 9 on an ISODate "2014-08-11T00:00:00Z".
+Ans:
+
+
+db.res.find(
+  {
+    { grades: { $elemMatch: { score:9 } }},
+    { grades: { $elemMatch: { grade:"A"} }},
+    { grades: { $elemMatch: { date:"ISODate("2014-08-11T00:00:00Z")"} }},
+
+  },
+  {
+    restaurant_id: 1,
+    name: 1,
+    grades: 1,
+    _id: 0
+  }
+)
+
+.
+
+2.Write a MongoDB query which will select the restaurant Id, name and grades for those
+restaurants which returns 0 as a remainder after dividing the score by 7.
+Ans:
+
+db.res.find(
+  {
+    "grades.score": { $mod: [7, 0] }
+  },
+  {
+    restaurant_id: 1,
+    name: 1,
+    grades: 1,
+    _id: 0
+  }
+)
+
+
+
+3. Write a MongoDB query to arrange the name of the restaurants in ascending order along with all the columns.(using pipeline)
+Ans:
+
+db.res.aggregate([
+  {$sort:{name:1}},
+  {$project:{name:1,_id:0}}
+  
+])
+
+
+4. Write a MongoDB query to arrange the name of the restaurants in descending along with all the columns.(using pipeline)
+Ans:
+
+db.res.aggregate([
+{$sort:{name:-1}},
+{$project:{name:1,_id:0}}])
+
+
+
+5. Write a MongoDB query to arranged the name of the cuisine in ascending order and for that same cuisine borough should be in descending order.(using pipeline)
+Ans:
+
+db.res.aggregate([
+  {$sort:{cuisine:1,borough:-1}},
+  {$project:{name:1,_id:0}}
+])
+
+6. How many restaurants are there in the dataset?(using pipeline)
+Ans:
+
+db.res.aggregate([
+  {$count:"name"}
+])
+
+7. List all unique boroughs where restaurants are located.(using pipeline)
+Ans:
+
+
+db.res.aggregate([
+  { $group: { _id: "$borough" } },
+  { $project: { _id: 0, borough: "$_id" } },
+
+])
+
+
+8. Show the first 5 restaurant names and their boroughs.(using pipeline)
+Ans:
+
+db.res.aggregate([
+    {$limit:5},
+  {
+    $project:{name:1,_id:0}
+  }
+])
+
+
+
+

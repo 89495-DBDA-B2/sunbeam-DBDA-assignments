@@ -1,0 +1,358 @@
+1. Write a shell script to display your LOGIN NAME and HOME directory. 
+Ans. 
+#!/bin/bash
+
+# Display login name
+echo "Login Name: $(whoami)"
+
+# Display home directory
+echo "Home Directory: $HOME"
+
+
+2. Write a shell script to display menu like “1. Date, 2. Cal, 3. Ls, 4. Pwd, 5. Exit” and execute the commands depending on user choice. 
+Ans. 
+#!/bin/bash
+
+# Function to display the menu
+display_menu() {
+  echo "1. Date"
+  echo "2. Cal"
+  echo "3. Ls"
+  echo "4. Pwd"
+  echo "5. Exit"
+}
+
+# Loop to show the menu until the user chooses to exit
+while true; do
+  display_menu
+
+  # Prompt for the user's choice
+  read -p "Enter your choice [1-5]: " choice
+
+  case $choice in
+    1)
+      # Show the current date and time
+      date
+      ;;
+    2)
+      # Show the current month's calendar
+      cal
+      ;;
+    3)
+      # List files in the current directory
+      ls
+      ;;
+    4)
+      # Display the current working directory
+      pwd
+      ;;
+    5)
+      # Exit the script
+      echo "Exiting..."
+      exit 0
+      ;;
+    *)
+      # If the user enters an invalid choice
+      echo "Invalid choice. Please try again."
+      ;;
+  esac
+done
+
+
+
+3. Write a shell script to accept the name from the user and check whether user entered name is file or directory. If name is file display its size and if it is directory display its contents. 
+Ans. 
+#!/bin/bash
+
+# Prompt the user for a name (file or directory)
+read -p "Enter the name of the file or directory: " name
+
+# Check if the input is a file or directory
+if [ -f "$name" ]; then
+  # If it's a file, display its size
+  echo "$name is a file."
+  echo "Size of the file: $(stat -c %s "$name") bytes"
+  
+elif [ -d "$name" ]; then
+  # If it's a directory, display its contents
+  echo "$name is a directory."
+  echo "Contents of the directory:"
+  ls "$name"
+  
+else
+  # If it's neither a file nor a directory
+  echo "$name is not a valid file or directory."
+fi
+
+
+
+
+4. Write a shell script to determine whether a given number is prime or not 
+Ans. 
+#!/bin/bash
+
+# Function to check if a number is prime
+is_prime() {
+  num=$1
+  if [ $num -le 1 ]; then
+    echo "$num is not a prime number."
+    return 1
+  fi
+
+  # Check for factors from 2 to the square root of the number
+  for ((i = 2; i <= num / 2; i++)); do
+    if [ $((num % i)) -eq 0 ]; then
+      echo "$num is not a prime number."
+      return 1
+    fi
+  done
+
+  echo "$num is a prime number."
+}
+
+# Prompt the user for a number
+read -p "Enter a number: " number
+
+# Call the function to check if the number is prime
+is_prime $number
+
+
+5.  Write a Program to find the greatest of three numbers  
+Ans. 
+#!/bin/bash
+
+# Prompt the user to enter three numbers
+read -p "Enter the first number: " num1
+read -p "Enter the second number: " num2
+read -p "Enter the third number: " num3
+
+# Compare the three numbers
+if [ $num1 -ge $num2 ] && [ $num1 -ge $num3 ]; then
+  echo "The greatest number is $num1."
+elif [ $num2 -ge $num1 ] && [ $num2 -ge $num3 ]; then
+  echo "The greatest number is $num2."
+else
+  echo "The greatest number is $num3."
+fi
+
+
+
+
+6.  Write a Program to find whether a given year is a leap year or not  
+Ans. 
+#!/bin/bash
+
+# Prompt the user to enter a year
+read -p "Enter a year: " year
+
+# Check if the year is divisible by 4, but not 100 unless also divisible by 400
+if [ $((year % 4)) -eq 0 ] && { [ $((year % 100)) -ne 0 ] || [ $((year % 400)) -eq 0 ]; }; then
+  echo "$year is a leap year."
+else
+  echo "$year is not a leap year."
+fi
+
+
+7. Write a Program to find whether a given number is positive or negative 
+Ans. 
+#!/bin/bash
+
+# Prompt the user to enter a number
+read -p "Enter a number: " number
+
+# Check if the number is positive, negative, or zero
+if [ $number -gt 0 ]; then
+  echo "$number is a positive number."
+elif [ $number -lt 0 ]; then
+  echo "$number is a negative number."
+else
+  echo "$number is zero."
+fi
+
+
+8. Write a program to print the table of a given number. 
+Ans. 
+#!/bin/bash
+
+# Prompt the user to enter a number
+read -p "Enter a number: " num
+
+echo "Multiplication Table of $num:"
+
+# Loop from 1 to 10 to print the table
+for i in {1..10}
+do
+  echo "$num x $i = $((num * i))"
+done
+
+
+9. Write a program to find the factorial of given number. 
+Ans. 
+#!/bin/bash
+
+# Prompt the user for a number
+read -p "Enter a number: " num
+
+# Initialize factorial to 1
+fact=1
+
+# Check if the number is non-negative
+if [ $num -lt 0 ]; then
+  echo "Factorial is not defined for negative numbers."
+else
+  for (( i=1; i<=num; i++ ))
+  do
+    fact=$((fact * i))
+  done
+  echo "Factorial of $num is: $fact"
+fi
+
+
+10. Write a program to find given number of terms in the Fibonacci series. 
+Ans.
+#!/bin/bash
+
+# Prompt the user to enter the number of terms
+read -p "Enter the number of terms: " n
+
+# Initialize the first two Fibonacci numbers
+a=0
+b=1
+
+echo "Fibonacci series up to $n terms:"
+
+for (( i=0; i<n; i++ ))
+do
+  echo -n "$a "
+  fn=$((a + b))
+  a=$b
+  b=$fn
+done
+
+echo    # move to new line after the loop
+
+
+11. Write a program to calculate gross salary if the DA is 40%, HRA is 20% of basic salary. Accept basic salary form user and display gross salary (Result can be floating point value).  
+Ans.
+#!/bin/bash
+
+# Prompt the user to enter basic salary
+read -p "Enter Basic Salary: " basic
+
+# Calculate DA (40% of basic) and HRA (20% of basic)
+da=$(echo "scale=2; 0.40 * $basic" | bc)
+hra=$(echo "scale=2; 0.20 * $basic" | bc)
+
+# Calculate gross salary
+gross=$(echo "scale=2; $basic + $da + $hra" | bc)
+
+# Display result
+echo "Basic Salary : ₹$basic"
+echo "DA (40%)     : ₹$da"
+echo "HRA (20%)    : ₹$hra"
+echo "Gross Salary : ₹$gross"
+
+
+12. Write a shell script to accept a filename as argument and displays the last modification time if the file exists and a suitable message if it doesn’t exist.  
+Ans. 
+#!/bin/bash
+
+# Check if filename is passed as argument
+if [ $# -eq 0 ]; then
+  echo "Usage: $0 filename"
+  exit 1
+fi
+
+filename=$1
+
+# Check if the file exists
+if [ -e "$filename" ]; then
+  echo "Last modification time of '$filename':"
+  stat -c %y "$filename"  # For Linux
+else
+  echo "File '$filename' does not exist."
+fi
+
+
+13. Write a shell script to display only hidden file of current directory.  
+Ans.
+#!/bin/bash
+
+echo "Hidden files in the current directory:"
+ls -d .[^.]* 2>/dev/null
+
+
+
+14. Write a shell script to display only executable files of current directory. 
+Ans. 
+#!/bin/bash
+
+echo "Executable files in the current directory:"
+for file in *
+do
+  if [ -x "$file" ] && [ -f "$file" ]; then
+    echo "$file"
+  fi
+done
+
+
+
+15. Accept the two file names from user and append the contents in reverse case of first file into second file. 
+Ans. 
+#!/bin/bash
+
+# Accept two file names
+read -p "Enter the first file name: " file1
+read -p "Enter the second file name: " file2
+
+# Check if first file exists
+if [[ ! -f "$file1" ]]; then
+    echo "First file does not exist."
+    exit 1
+fi
+
+# Convert content to reverse case and append to second file
+tr 'A-Za-z' 'a-zA-Z' < "$file1" >> "$file2"
+
+echo "Reversed case content from '$file1' has been appended to '$file2'."
+
+
+16. Write a shell script to display welcome message to the user along with contents of his 
+home directory. Ensure that shell script will execute automatically when user login to the 
+shell. (Make entry of your shell script into .bashrc file into your home directory). 
+Ans.
+#!/bin/bash
+
+echo "===================================="
+echo "Welcome, $USER!"
+echo "Today is: $(date)"
+echo "Your Home Directory Contents:"
+echo "------------------------------------"
+ls -lh ~
+echo "===================================="
+
+
+
+17. Print the following pattern. 
+* 
+*  * 
+*  *  * 
+*  *  *  * 
+*  *  *  *  * 
+
+
+Ans.
+
+#!/bin/bash
+
+rows=5  # number of rows
+
+for ((i=1; i<=rows; i++))
+do
+    for ((j=1; j<=i; j++))
+    do
+        echo -n "*  "
+    done
+    echo
+done
+

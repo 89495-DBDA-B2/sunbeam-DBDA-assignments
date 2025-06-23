@@ -9,28 +9,13 @@ db.res.find({
 
 2. Write a MongoDB query to find the restaurants that do not prepare any cuisine of ’American’ and their grade score more than 70 and latitude less than -65.754168.
 
-db.res.find({
-    $and:[
-        {cuisine:{$ne:"American"}},
-        {"grades.score":{$gt:70}},
-        {"address.coord.0": { $lt: -65.754168}},
-    ]
-},
-{name:1,_id:0}
-)
-
 
 db.res.find({
-  $and: [
+  $and: 
+  [
     { cuisine: { $ne: "American " } },
-    {
-      grades: {
-        $elemMatch: {
-          score: { $gt: 70 }
-        }
-      }
-    },
-    { "address.coord.0": { $lt: -65.754168 } }
+    { grades: { $elemMatch: { score: { $gt: 70 }}}},
+    { "address.coord.0": { $lt: -65.754168 }}
   ]
 },
 {
@@ -42,14 +27,16 @@ db.res.find({
 Note : Do this query without using $and operator.
 
 
-db.res.find({
-    
-        cuisine:{$ne:"American"},
-        "grades.score":{$gt:70},
-        "address.coord.0": { $lt: -65.754168},
-    
-},
-{name:1,_id:0}
+db.res.find(
+  {
+    cuisine: { $ne: "American" },
+    grades: { $elemMatch: { score: { $gt: 70 } } },
+    "address.coord.0": { $lt: -65.754168 }
+  },
+  {
+    name: 1,
+    _id: 0
+  }
 )
 
 
@@ -62,18 +49,26 @@ db.res.find(
 )
 
 
+
 5. Write a MongoDB query to find the restaurant Id, name, borough and cuisine for those restaurants which contain ’ces’ as last three letters for its name.
+
 
 db.res.find(
     { name: { $regex: 'ces$' } },                               
     { restaurant_id: 1, name: 1, borough: 1, cuisine: 1, _id: 0 }
 )
 
+
+
 6. Write a MongoDB query to find the restaurant Id, name, borough and cuisine for those restaurants which contain ’Reg’ as three letters somewhere in its name.
+
+
 db.res.find(
     { name: { $regex: 'Reg' } },                               
     { restaurant_id: 1, name: 1, borough: 1, cuisine: 1, _id: 0 }
 )
+
+
 
 7. Write a MongoDB query to find the restaurants which belong to the borough Bronx and prepared either American or Chinese dish.
 
@@ -90,16 +85,18 @@ db.res.find(
 
 8. Write a MongoDB query to arrange the name of the restaurants in ascending order along with all the columns.
 
-db.res.find({
-},
-{name:1,_id:0}).sort({name:1})
+db.res.find(
+  {},
+  {name:1,_id:0}).sort({name:1})
+
+
 
 9. Write a MongoDB query to arrange the name of the restaurants in descending along with all the columns.
 
 
-db.res.find({
-},
-{name:1,_id:0}).sort({name:-1}
+db.res.find(
+  {},
+  {name:1,_id:0}).sort({name:-1}
 )
 
 
@@ -111,6 +108,7 @@ db.res.find(
 ).sort({ cuisine: 1, borough: -1 })
 
 
+
 11. Write a MongoDB query to know whether all the addresses contains the street or not.
 
 db.res.countDocuments({ "address.street": { $exists: false } })
@@ -119,13 +117,14 @@ db.res.countDocuments({ "address.street": { $exists: false } })
 12. Write a MongoDB query to find the restaurants who achieved a score more than 90.
 
 db.res.find(
-    {"grade.score":{$gt:90}},
+     { grades: { $elemMatch: { score: { $gt:90 } } }},
     {name:1,_id:0}
 )
+
 
 13. Write a MongoDB query to find the restaurants that achieved a score, more than 80 but less than100.
 
 db.res.find(
-    {"grades.score":{ $gt:80,$lt:100}},
+   { grades: { $elemMatch: { score: { $gt:80,$lt:100 } } }},
     {name:1,_id:0}
 )

@@ -1,0 +1,99 @@
+{
+  "person_details": {
+    "first_name": "sanju",
+    "last_name": "pawar"
+  },
+  "simple_profile": {
+    "name": "sujay",
+    "age": 56,
+    "married": true
+  },
+  "languages": ["C++", "JAVA", "Python", "Kotlin", "Go"],
+  "days_in_week": ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+  "multiple_mobiles": {
+    "name": "sujay",
+    "age": 56,
+    "married": true,
+    "mobile": ["1234543221", "87654389365"]
+  },
+  "contact_details": {
+    "name": "sujay",
+    "age": 56,
+    "married": true,
+    "contact": {
+      "mobile": "9887667767",
+      "email": "sujay@yahoo.com"
+    }
+  },
+  "employees": [
+    {
+      "name": "sujay",
+      "age": 56,
+      "married": true,
+      "contact": {
+        "mobile": "9887667767",
+        "email": "sujay67@yahoo.com"
+      }
+    },
+    {
+      "name": "vijay",
+      "age": 44,
+      "married": true,
+      "contact": {
+        "mobile": "9885555567",
+        "email": "vijay99@yahoo.com"
+      }
+    },
+    {
+      "name": "ajay",
+      "age": 28,
+      "married": false,
+      "contact": {
+        "mobile": "921267767",
+        "email": "ajay12@yahoo.com"
+      }
+    }
+  ],
+  "students": [
+    {
+      "StudName": "Aayush",
+      "Std": 5,
+      "Marks": {
+        "Sci": 33,
+        "Eng": 25,
+        "Math": 15
+      },
+      "FavoriteSports": ["Football", "Yoga"]
+    },
+    {
+      "StudName": "Aarit",
+      "Std": 8,
+      "Marks": {
+        "Sci": 50,
+        "Eng": 48,
+        "Math": 41
+      },
+      "FavoriteSports": ["Football", "Basketball"]
+    },
+    {
+      "StudName": "Jayesh",
+      "Std": 7,
+      "Marks": {
+        "Sci": 32,
+        "Eng": 28,
+        "Math": 14
+      },
+      "FavoriteSports": ["Basketball", "Cricket"]
+    },
+    {
+      "StudName": "Satyam",
+      "Std": 8,
+      "Marks": {
+        "Sci": 56,
+        "Eng": 47,
+        "Math": 43
+      },
+      "FavoriteSports": ["Basketball", "Martial Arts"]
+    }
+  ]
+}

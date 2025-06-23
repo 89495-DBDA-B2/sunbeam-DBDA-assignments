@@ -301,7 +301,7 @@ mysql> SELECT      FIRST_NAME,      SALARY,      ROUND(SALARY, -3) AS rounded_sa
 Q.6 Display employee ID and the date on which he ended his previous job.
 Ans.
 
-mysql> SELECT first_name,         DATE_ADD(LAST_DAY(hire_date), INTERVAL 1 DAY) AS first_salary_date FROM employees;
+mysql> SELECT first_name, DATE_ADD(LAST_DAY(hire_date), INTERVAL 1 DAY) AS first_salary_date FROM employees;
 +-------------+-------------------+
 | first_name  | first_salary_date |
 +-------------+-------------------+
@@ -421,7 +421,7 @@ mysql> SELECT first_name,         DATE_ADD(LAST_DAY(hire_date), INTERVAL 1 DAY) 
 Q.7 Display first name and date of first salary of the employees. (Consider 1st day of month as salary day) HINT: LAST_DAY.
 Ans.
 
-mysql> SELECT first_name,         DATE_ADD(LAST_DAY(hire_date), INTERVAL 1 DAY) AS first_salary_date FROM employees;
+mysql> SELECT first_name, DATE_ADD(LAST_DAY(hire_date), INTERVAL 1 DAY) AS first_salary_date FROM employees;
 +-------------+-------------------+
 | first_name  | first_salary_date |
 +-------------+-------------------+
@@ -443,7 +443,7 @@ mysql> SELECT first_name,         DATE_ADD(LAST_DAY(hire_date), INTERVAL 1 DAY) 
 | Alexander   | 1987-08-01        |
 | Shelli      | 1987-08-01        |
 | Sigal       | 1987-08-01        |
-| Guy         | 1987-08-01        |
+| Guy         | 1987-08-01          |
 | Karen       | 1987-08-01        |
 | Matthew     | 1987-08-01        |
 | Adam        | 1987-08-01        |

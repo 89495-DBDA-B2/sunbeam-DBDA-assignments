@@ -64,7 +64,10 @@ Q.5 Write a query that will give you the names and cities of all salespeople in 
 
 Ans.
 
-mysql> select sname,city from salespeople where city='London';
+mysql>SELECT name, city
+FROM salespeople
+WHERE city = 'London' AND commission > 0.10;
+
 +--------+--------+
 | sname  | city   |
 +--------+--------+
